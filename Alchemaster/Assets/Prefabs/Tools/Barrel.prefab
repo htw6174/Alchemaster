@@ -26,11 +26,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 494636}
-  - 114: {fileID: 11419140}
   - 135: {fileID: 13551896}
+  - 114: {fileID: 11419140}
   m_Layer: 0
   m_Name: Output Pipe
-  m_TagString: Untagged
+  m_TagString: Connector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,7 +49,7 @@ GameObject:
   - 114: {fileID: 11462078}
   m_Layer: 0
   m_Name: Barrel
-  m_TagString: Untagged
+  m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 182214}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: 1, z: -1}
+  m_LocalPosition: {x: -5.69399977, y: 1.57599998, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 437708}
@@ -166,6 +166,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowedFluid: 0
+  input: 0
+  output: 1
+  otherEnd: {fileID: 0}
 --- !u!114 &11462078
 MonoBehaviour:
   m_ObjectHideFlags: 1

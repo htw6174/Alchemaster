@@ -48,7 +48,7 @@ GameObject:
   - 114: {fileID: 11498938}
   m_Layer: 0
   m_Name: Input Pipe 2
-  m_TagString: Untagged
+  m_TagString: Connector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ GameObject:
   - 114: {fileID: 11453256}
   m_Layer: 0
   m_Name: Input Pipe 1
-  m_TagString: Untagged
+  m_TagString: Connector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,7 +102,7 @@ GameObject:
   - 114: {fileID: 11421086}
   m_Layer: 0
   m_Name: Mixer
-  m_TagString: Untagged
+  m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,11 +115,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 446034}
-  - 114: {fileID: 11465118}
   - 135: {fileID: 13556624}
+  - 114: {fileID: 11465118}
   m_Layer: 0
   m_Name: Output Pipe
-  m_TagString: Untagged
+  m_TagString: Connector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,7 +131,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 165354}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -1}
+  m_LocalPosition: {x: -.0199999996, y: 1.38, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 476106}
@@ -367,6 +367,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowedFluid: 0
+  input: 1
+  output: 0
+  otherEnd: {fileID: 0}
 --- !u!114 &11465118
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -379,6 +382,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowedFluid: 0
+  input: 0
+  output: 1
+  otherEnd: {fileID: 0}
 --- !u!114 &11498938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -391,6 +397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowedFluid: 0
+  input: 1
+  output: 0
+  otherEnd: {fileID: 0}
 --- !u!135 &13506780
 SphereCollider:
   m_ObjectHideFlags: 1
