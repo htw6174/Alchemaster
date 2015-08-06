@@ -296,6 +296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMousePos: {x: 0, y: 0, z: 0}
+  firstConnector: {fileID: 0}
+  placingConnector: 0
 --- !u!1 &497123879
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &497123880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,7 +777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1548503887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,7 +995,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1869906242
 MonoBehaviour:
   m_ObjectHideFlags: 0

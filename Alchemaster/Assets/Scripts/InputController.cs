@@ -5,6 +5,8 @@ public class InputController : MonoBehaviour {
 
     public Vector3 currentMousePos;
 
+    public Connector firstConnector;
+
     public bool placingConnector = false;
 
     void Update()
@@ -27,17 +29,16 @@ public class InputController : MonoBehaviour {
 
                 if (target.tag == Tags.connector)
                 {
-                    Connector selectedConnector = target.GetComponent<Connector>();
+                    Connector hitConnecter = target.GetComponent<Connector>();
 
-                    if (selectedConnector.otherEnd)
+                    if (placingConnector)
                     {
-                        selectedConnector.otherEnd.otherEnd = null;
-                        selectedConnector.otherEnd = null;
+                        PlaceConnector(hitConnecter);
                     }
-                    placingConnector = true;
-                    Debug.Log("Making new connection...");
-
-
+                    else
+                    {
+                        SelectConnector(hitConnecter);
+                    }
                 }
             }
         }
@@ -60,8 +61,33 @@ public class InputController : MonoBehaviour {
         return clickHit;
     }
 
-    private void PlaceConnector()
+    private void SelectConnector(Connector selected)
     {
 
+        if (selected.otherEnd)
+        {
+            selected.otherEnd.otherEnd = null;
+            selected.otherEnd = null;
+        }
+        firstConnector = selected;
+        placingConnector = true;
+        Debug.Log("Making new connection with " + selected.gameObject.name);
+    }
+
+    private void PlaceConnector(Connector selected)
+    {
+        if (selected.otherEnd)
+        {
+            selected.otherEnd.otherEnd = null;
+            selected.otherEnd = firstConnector;
+            selected.otherEnd.otherEnd = selected;
+        }
+        else
+        {
+            selected.otherEnd = firstConnector;
+            selected.otherEnd.otherEnd = selected;
+        }
+        placingConnector = false;
+        Debug.Log("Made new connection with " + selected.gameObject.name);
     }
 }
