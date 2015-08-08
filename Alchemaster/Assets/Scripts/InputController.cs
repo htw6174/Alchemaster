@@ -8,6 +8,8 @@ public class InputController : MonoBehaviour {
     public Vector3 currentMousePos = Vector3.zero;
     public Vector3 lastMousePos = Vector3.zero;
 
+    public float scrollSensitivity = 10f;
+
     public GameObject target; //Object that was hit when the mouse was pressed
     public GameObject heldObject; //Last pickable object to be selected
     public Connector firstConnector; //First connector selected when making a new connection
@@ -28,6 +30,8 @@ public class InputController : MonoBehaviour {
 
         CheckPanInput();
 
+        CheckScrollInput();
+
         if (holdingObject)
         {
             Vector3 heldPosition = WorldMousePos(currentMousePos, Mathf.Abs(Camera.main.transform.position.z - heldObject.transform.position.z));
@@ -37,18 +41,20 @@ public class InputController : MonoBehaviour {
 
         if (dragging)
         {
-            Vector3 currentMouseWorld = WorldMousePos(currentMousePos, camera.transform.position.z); //Camera.main.ScreenToWorldPoint(currentMousePos);
-            Vector3 lastMouseWorld = WorldMousePos(lastMousePos, camera.transform.position.z); //Camera.main.ScreenToWorldPoint(lastMousePos);
-            Vector3 cameraDelta = new Vector3(lastMouseWorld.x - currentMouseWorld.x, lastMouseWorld.y - currentMouseWorld.y, 0f);
-            Debug.Log(cameraDelta);
-            Vector3 newCamPosition = camera.transform.position - cameraDelta;
-            newCamPosition.x = Mathf.Clamp(newCamPosition.x, minCamPos.x, maxCamPos.x);
-            newCamPosition.y = Mathf.Clamp(newCamPosition.y, minCamPos.y, maxCamPos.y);
-            newCamPosition.z = Mathf.Clamp(newCamPosition.z, minCamPos.z, maxCamPos.z);
-            camera.transform.position = newCamPosition;
+            Vector3 currentMouseWorld = WorldMousePos(currentMousePos, camera.transform.position.z);
+            Vector3 lastMouseWorld = WorldMousePos(lastMousePos, camera.transform.position.z);
+            MoveCamera(new Vector3(lastMouseWorld.x - currentMouseWorld.x, lastMouseWorld.y - currentMouseWorld.y, 0f));
         }
 
         lastMousePos = currentMousePos;
+    }
+
+    void OnDrawGizmos()
+    {
+        if (placingConnector)
+        {
+            Gizmos.DrawLine(firstConnector.transform.position, WorldMousePos(currentMousePos, Mathf.Abs(Camera.main.transform.position.z - firstConnector.transform.position.z)));
+        }
     }
 
     private void CheckSelectInput()
@@ -101,16 +107,26 @@ public class InputController : MonoBehaviour {
     private void CheckPanInput()
     {
         dragging = Input.GetMouseButton(1);
+    }
 
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    dragging = true;
-        //}
+    private void CheckScrollInput()
+    {
+        MoveCamera(new Vector3(0f, 0f, Input.GetAxis("Mouse ScrollWheel")) * scrollSensitivity * -1f);
+    }
 
-        //if (Input.GetMouseButtonUp(1))
-        //{
-        //    dragging = false;
-        //}
+    public Vector3 Vec3Clamp(Vector3 value, Vector3 min, Vector3 max)
+    {
+        Vector3 clampedVector = Vector3.zero;
+        clampedVector.x = Mathf.Clamp(value.x, min.x, max.x);
+        clampedVector.y = Mathf.Clamp(value.y, min.y, max.y);
+        clampedVector.z = Mathf.Clamp(value.z, min.z, max.z);
+        return clampedVector;
+    }
+
+    public void MoveCamera(Vector3 cameraDelta)
+    {
+        Vector3 newCamPosition = camera.transform.position - cameraDelta;
+        camera.transform.position = Vec3Clamp(newCamPosition, minCamPos, maxCamPos);
     }
 
     //Ray from camera position to mouse world position on the near clipping plane of the camera
@@ -146,7 +162,7 @@ public class InputController : MonoBehaviour {
     //Removes old connections on the selected connector, sets it as first of two ends
     private void SelectConnector(Connector selected)
     {
-
+        if (selected.input == false && selected.output == false) return;
         if (selected.otherEnd)
         {
             selected.otherEnd.otherEnd = null;
@@ -160,6 +176,16 @@ public class InputController : MonoBehaviour {
     //Removes old connections on selected connector, sets it as the second of two ends
     private void PlaceConnector(Connector selected)
     {
+        if (selected == firstConnector)
+        {
+            firstConnector = null;
+            placingConnector = false;
+            Debug.Log("Canceled placing of connector");
+            return;
+        }
+        if (selected.input == false && firstConnector.input == false) return;
+        if (selected.output == false && firstConnector.output == false) return;
+        if (selected.input == false && selected.output == false) return;
         if (selected.otherEnd)
         {
             selected.otherEnd.otherEnd = null;
