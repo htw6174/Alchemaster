@@ -4,6 +4,7 @@ using System.Collections;
 public class CameraPan : MonoBehaviour
 {
     public GameObject table;
+    public InputController inputController;
 
     public Vector3 maxCamPos;
     public Vector3 minCamPos;
@@ -18,10 +19,10 @@ public class CameraPan : MonoBehaviour
         currentMousePos = Input.mousePosition;
         currentMousePos.z = transform.position.z;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
-            Vector3 unvertedMousePos = Camera.main.ScreenToWorldPoint(new Vector3(currentMousePos.x, currentMousePos.y, -Camera.main.nearClipPlane));
-            Ray clickCast = new Ray(Camera.main.transform.position, Camera.main.transform.position - unvertedMousePos);
+            //Vector3 unvertedMousePos = Camera.main.ScreenToWorldPoint(new Vector3(currentMousePos.x, currentMousePos.y, -Camera.main.nearClipPlane));
+            Ray clickCast = inputController.ClickRay(currentMousePos); //new Ray(Camera.main.transform.position, Camera.main.transform.position - unvertedMousePos);
             Debug.DrawRay(clickCast.origin, clickCast.direction);
             RaycastHit hit;
             if (Physics.Raycast(clickCast, out hit))
@@ -35,7 +36,7 @@ public class CameraPan : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1))
         {
             dragging = false;
         }
