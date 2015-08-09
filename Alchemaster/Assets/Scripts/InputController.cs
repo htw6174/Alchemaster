@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InputController : MonoBehaviour {
 
-    public GameObject camera;
+    public GameObject mainCamera;
 
     public Vector3 currentMousePos = Vector3.zero;
     public Vector3 lastMousePos = Vector3.zero;
@@ -41,8 +41,8 @@ public class InputController : MonoBehaviour {
 
         if (dragging)
         {
-            Vector3 currentMouseWorld = WorldMousePos(currentMousePos, camera.transform.position.z);
-            Vector3 lastMouseWorld = WorldMousePos(lastMousePos, camera.transform.position.z);
+            Vector3 currentMouseWorld = WorldMousePos(currentMousePos, mainCamera.transform.position.z);
+            Vector3 lastMouseWorld = WorldMousePos(lastMousePos, mainCamera.transform.position.z);
             MoveCamera(new Vector3(lastMouseWorld.x - currentMouseWorld.x, lastMouseWorld.y - currentMouseWorld.y, 0f));
         }
 
@@ -125,8 +125,8 @@ public class InputController : MonoBehaviour {
 
     public void MoveCamera(Vector3 cameraDelta)
     {
-        Vector3 newCamPosition = camera.transform.position - cameraDelta;
-        camera.transform.position = Vec3Clamp(newCamPosition, minCamPos, maxCamPos);
+        Vector3 newCamPosition = mainCamera.transform.position - cameraDelta;
+        mainCamera.transform.position = Vec3Clamp(newCamPosition, minCamPos, maxCamPos);
     }
 
     //Ray from camera position to mouse world position on the near clipping plane of the camera
