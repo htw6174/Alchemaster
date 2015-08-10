@@ -12,7 +12,7 @@ public class Fluid {
 
     public Fluid()
     {
-        name = "Undefined Fluid";
+        name = "Water";
         solutes = new Solute[0];
         color = Color.white;
     }

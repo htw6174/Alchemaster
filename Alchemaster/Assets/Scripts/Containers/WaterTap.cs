@@ -10,12 +10,12 @@ public class WaterTap : Container {
 
     void Update()
     {
-        Refill(5);
-        OutputFluid(1, contents);
+        Refill(outputVolume * 2);
+        OutputFluid(outputVolume, contents);
     }
 
     private void Refill(int volume)
     {
-        currentVolume = Mathf.Clamp(currentVolume + 5, minVolume, maxVolume);
+        currentVolume = Mathf.Clamp(currentVolume + volume, minVolume, maxVolume);
     }
 }

@@ -5,9 +5,11 @@ using System.Collections;
 public class Container : MonoBehaviour {
 
     public Fluid contents;
-    public int maxVolume = 1000; //Capacity of the container in mL
+    public int maxVolume = 10000; //Capacity of the container in mL
     public int minVolume = 0; //Shouldn't ever be anything other than 0, but can't hurt to be adjustable
     public int currentVolume;
+
+    public int outputVolume;
 
     public Text volumeDisplay;
 
@@ -23,6 +25,7 @@ public class Container : MonoBehaviour {
     void Update()
     {
         UpdateVolumeDisplay();
+        OutputFluid(outputVolume, contents);
         //UpdateColor();
     }
 
@@ -32,7 +35,7 @@ public class Container : MonoBehaviour {
         {
             string formattedCurrent = string.Format("{0:F3}", (currentVolume / 1000f));
             string formattedMax = string.Format("{0:F3}", (maxVolume / 1000f));
-            volumeDisplay.text = formattedCurrent + " Liters /\n" + formattedMax + " Liters";
+            volumeDisplay.text = formattedCurrent + " L /\n" + formattedMax + " L " + (currentVolume == 0 ? "" : contents.name);
         }
     }
 
@@ -52,12 +55,17 @@ public class Container : MonoBehaviour {
     //Called to insert fluid into the container. Adds fluid to the container and returns the volume of fluid input
     public virtual int InputFluid(int volume, Fluid fluid)
     {
+        if (currentVolume == 0 || contents == null)
+        {
+            contents = fluid;
+        }
         if (contents == null || contents.SameSolution(fluid))
         {
             if (currentVolume + volume > maxVolume)
             {
+                int insertedVolume = maxVolume - currentVolume;
                 currentVolume = maxVolume;
-                return maxVolume - currentVolume;
+                return insertedVolume;
             }
             currentVolume += volume;
             return volume;
@@ -76,10 +84,10 @@ public class Container : MonoBehaviour {
         {
             if (connector.output == true)
             {
-                int outputVolume = Mathf.Min(volume, currentVolume);
-                outputVolume = connector.OutputFluid(outputVolume, fluid);
-                currentVolume -= outputVolume;
-                return outputVolume;
+                int maxOutput = Mathf.Min(volume, currentVolume);
+                int realOutput = connector.OutputFluid(maxOutput, fluid);
+                currentVolume -= realOutput;
+                return realOutput;
             }
         }
         return 0;
