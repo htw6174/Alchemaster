@@ -183,21 +183,10 @@ public class InputController : MonoBehaviour {
             Debug.Log("Canceled placing of connector");
             return;
         }
-        if (selected.input == false && firstConnector.input == false) return;
-        if (selected.output == false && firstConnector.output == false) return;
-        if (selected.input == false && selected.output == false) return;
-        if (selected.otherEnd)
+        if (firstConnector.MakeConnection(selected))
         {
-            selected.otherEnd.otherEnd = null;
-            selected.otherEnd = firstConnector;
-            selected.otherEnd.otherEnd = selected;
+            placingConnector = false;
+            return;
         }
-        else
-        {
-            selected.otherEnd = firstConnector;
-            selected.otherEnd.otherEnd = selected;
-        }
-        placingConnector = false;
-        Debug.Log("Made new connection with " + selected.gameObject.name);
     }
 }

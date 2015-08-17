@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof (MeshFilter), typeof (MeshRenderer))]
 public class PipeCreator : MonoBehaviour {
 
-    public float curveRadius, pipeRadius;
+    public float pipeRadius;
 
-    public int curveSegmentCount, pipeSegmentCount;
+    public int segmentCount, sideCount;
 
     public float directionLength;
 
@@ -27,21 +28,61 @@ public class PipeCreator : MonoBehaviour {
         };
     }
 
+    public void InitializePipe(Vector3 start, Vector3 end, Vector3 startDirection, Vector3 endDirection, float radius, int segments = 20, int sides = 10)
+    {
+        points = new Vector3[] { start, Vector3.zero, Vector3.zero, end };
+        this.startDirection = startDirection;
+        this.endDirection = endDirection;
+        pipeRadius = radius;
+        segmentCount = segments;
+        sideCount = sides;
+        UpdatePipeMesh();
+    }
+
+    public void UpdatePipe(Vector3 newStart, Vector3 newEnd)
+    {
+        points[0] = newStart;
+        points[3] = newEnd;
+        UpdatePipeMesh();
+    }
+
     private void Update()
     {
+        UpdatePipeMesh();
+    }
+
+    private void UpdatePipeMesh()
+    {
+        //PlaceControlPoints();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh.name = "Pipe";
         SetVertices();
         SetTriangles();
+        mesh.RecalculateNormals();
+    }
+
+    private void PlaceControlPoints()
+    {
+        float midpointX = (points[0].x + points[3].x) / 2f;
+        points[1].x = midpointX;
+        points[2].x = midpointX;
+
+        float deltaY = points[3].y - points[0].y;
+        float controlY = deltaY > 0f ? -1f : 1f;
+        points[1].y = controlY + points[0].y;
+        points[2].y = -controlY + points[3].y;
+
+        points[1].z = points[0].z;
+        points[2].z = points[3].z;
     }
 
     private void SetVertices()
     {
-        vertices = new Vector3[pipeSegmentCount * curveSegmentCount * 4];
-        float uStep = 1f / curveSegmentCount;
+        vertices = new Vector3[sideCount * segmentCount * 4];
+        float uStep = 1f / segmentCount;
         CreateFirstQuadRing(uStep);
-        int iDelta = pipeSegmentCount * 4;
-        for (int u = 2, i = iDelta; u <= curveSegmentCount; u++, i += iDelta)
+        int iDelta = sideCount * 4;
+        for (int u = 2, i = iDelta; u <= segmentCount; u++, i += iDelta)
         {
             CreateQuadRing(u * uStep, i);
         }
@@ -50,11 +91,11 @@ public class PipeCreator : MonoBehaviour {
 
     private void CreateFirstQuadRing(float u)
     {
-        float vStep = (2f * Mathf.PI) / pipeSegmentCount;
+        float vStep = (2f * Mathf.PI) / sideCount;
 
         Vector3 vertexA = GetPointOnPipe(0f, 0f);
         Vector3 vertexB = GetPointOnPipe(u, 0f);
-        for (int v = 1, i = 0; v <= pipeSegmentCount; v++, i += 4)
+        for (int v = 1, i = 0; v <= sideCount; v++, i += 4)
         {
             vertices[i] = vertexA;
             vertices[i + 1] = vertexA = GetPointOnPipe(0f, v * vStep);
@@ -65,11 +106,11 @@ public class PipeCreator : MonoBehaviour {
 
     private void CreateQuadRing(float u, int i)
     {
-        float vStep = (2f * Mathf.PI) / pipeSegmentCount;
-        int ringOffset = pipeSegmentCount * 4;
+        float vStep = (2f * Mathf.PI) / sideCount;
+        int ringOffset = sideCount * 4;
 
         Vector3 vertex = GetPointOnPipe(u, 0f);
-        for (int v = 1; v <= pipeSegmentCount; v++, i += 4)
+        for (int v = 1; v <= sideCount; v++, i += 4)
         {
             vertices[i] = vertices[i - ringOffset + 2];
             vertices[i + 1] = vertices[i - ringOffset + 3];
@@ -80,7 +121,7 @@ public class PipeCreator : MonoBehaviour {
 
     private void SetTriangles()
     {
-        triangles = new int[pipeSegmentCount * curveSegmentCount * 6];
+        triangles = new int[sideCount * segmentCount * 6];
         for (int t = 0, i = 0; t < triangles.Length; t += 6, i += 4)
         {
             triangles[t] = i;
@@ -157,26 +198,27 @@ public class PipeCreator : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        float vStep = (2f * Mathf.PI) / pipeSegmentCount;
+        float vStep = (2f * Mathf.PI) / sideCount;
 
         foreach (Vector3 point in points)
         {
             Gizmos.DrawSphere(point + transform.position, 0.4f);
         }
 
-        for (int u = 0; u <= curveSegmentCount; u++)
+        for (int u = 0; u <= segmentCount; u++)
         {
-            float pipeProgress = (float)u / curveSegmentCount;
+            float pipeProgress = (float)u / segmentCount;
             Gizmos.color = new Color(pipeProgress, 0f, 0f);
             Vector3 ringCenter = GetMidpointInPipe(points[0], points[1], points[2], points[3], pipeProgress) + transform.position;
             Gizmos.DrawSphere(ringCenter, 0.1f);
             Gizmos.DrawRay(ringCenter, GetDirection(pipeProgress, directionLength));
-            for (int v = 0; v < pipeSegmentCount; v++)
+            for (int v = 0; v < sideCount; v++)
             {
                 Vector3 point = GetPointOnPipe(pipeProgress, v * vStep);
-                Gizmos.color = new Color(0f, (float)v / pipeSegmentCount, pipeProgress);
-                Gizmos.DrawSphere(point + transform.position, 0.1f);
+                Gizmos.color = new Color(0f, (float)v / sideCount, pipeProgress);
+                //Gizmos.DrawSphere(point + transform.position, 0.1f);
             }
         }
+        UpdatePipeMesh();
     }
 }

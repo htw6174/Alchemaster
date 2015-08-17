@@ -17,9 +17,10 @@ public class Container : MonoBehaviour {
 
     private MeshRenderer meshRenderer;
 
-    void Start()
+    void Awake()
     {
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        connections = transform.GetComponentsInChildren<Connector>();
     }
 
     void Update()

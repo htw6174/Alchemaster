@@ -18,23 +18,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &110494
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 402632}
-  - 135: {fileID: 13556180}
-  - 114: {fileID: 11471222}
-  m_Layer: 0
-  m_Name: Output Pipe
-  m_TagString: Connector
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &137488
 GameObject:
   m_ObjectHideFlags: 1
@@ -86,6 +69,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &159712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 472472}
+  - 135: {fileID: 13526850}
+  - 114: {fileID: 11477932}
+  m_Layer: 0
+  m_Name: Output
+  m_TagString: Connector
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &164060
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,18 +105,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &402632
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110494}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.10000002, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 457844}
-  m_RootOrder: 1
 --- !u!4 &454600
 Transform:
   m_ObjectHideFlags: 1
@@ -140,10 +128,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 454600}
-  - {fileID: 402632}
+  - {fileID: 472472}
   - {fileID: 22435914}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &472472
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159712}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.10000002, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 457844}
+  m_RootOrder: 1
 --- !u!23 &2321238
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -276,13 +276,13 @@ MonoBehaviour:
   outputVolume: 10
   volumeDisplay: {fileID: 11446408}
   connections:
-  - {fileID: 11471222}
---- !u!114 &11471222
+  - {fileID: 11477932}
+--- !u!114 &11477932
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110494}
+  m_GameObject: {fileID: 159712}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b31062b9c861fa4583ee0d0ce61ef89, type: 3}
@@ -295,7 +295,11 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 1, a: 1}
   input: 0
   output: 1
+  direction: {x: 0, y: -1, z: 0}
   otherEnd: {fileID: 0}
+  pipePrefab: {fileID: 151806, guid: 57f6f2bec6912494fa1f02cfc9a8d7d5, type: 2}
+  pipe: {fileID: 0}
+  pipeRadius: .0500000007
 --- !u!114 &11485512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,6 +321,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!135 &13526850
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 159712}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: .200000003
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &13543088
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -328,18 +344,6 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &13556180
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110494}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .200000003
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &13643648
 CapsuleCollider:
