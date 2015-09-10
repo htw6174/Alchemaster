@@ -9,9 +9,15 @@ public class PipeCreator : MonoBehaviour {
     public int segmentCount, sideCount;
 
     public float directionLength;
+    public float pointOffset;
+    public float minCurvature = 10f;
+    public float medCurvature = 30f;
+    public float maxCurvature = 40f;
 
     public Vector3 startDirection;
     public Vector3 endDirection;
+
+    public bool autoControlPoints = true;
     public Vector3[] points;
 
     private Mesh mesh;
@@ -53,7 +59,7 @@ public class PipeCreator : MonoBehaviour {
 
     private void UpdatePipeMesh()
     {
-        //PlaceControlPoints();
+        if(autoControlPoints) PlaceControlPoints();
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh.name = "Pipe";
         SetVertices();
@@ -63,17 +69,62 @@ public class PipeCreator : MonoBehaviour {
 
     private void PlaceControlPoints()
     {
-        float midpointX = (points[0].x + points[3].x) / 2f;
-        points[1].x = midpointX;
-        points[2].x = midpointX;
+        float pipeCurvature = DetermineCurvature(startDirection, endDirection * -1f);
 
-        float deltaY = points[3].y - points[0].y;
-        float controlY = deltaY > 0f ? -1f : 1f;
-        points[1].y = controlY + points[0].y;
-        points[2].y = -controlY + points[3].y;
+        float deltaX = Mathf.Abs(points[3].x - points[0].x);
+        float deltaY = Mathf.Abs(points[3].y - points[0].y);
 
-        points[1].z = points[0].z;
-        points[2].z = points[3].z;
+        //float p1x = startDirection.x * pointOffset * deltaX;
+        //float p1y = startDirection.y * pointOffset * deltaY;
+        //float p2x = endDirection.x * pointOffset * deltaX;
+        //float p2y = endDirection.y * pointOffset * deltaY;
+
+        float p1x = MaxAbsolute(pipeCurvature * pipeRadius, pointOffset * deltaX) * startDirection.x;
+        float p1y = MaxAbsolute(pipeCurvature * pipeRadius, pointOffset * deltaY) * startDirection.y;
+        float p2x = MaxAbsolute(pipeCurvature * pipeRadius, pointOffset * deltaX) * endDirection.x;
+        float p2y = MaxAbsolute(pipeCurvature * pipeRadius, pointOffset * deltaY) * endDirection.y;
+
+        points[1] = new Vector3(p1x, p1y, 0f) + points[0];
+        points[2] = new Vector3(p2x * -1f, p2y * -1f, 0f) + points[3];
+
+        //float midpointX = (points[0].x + points[3].x) / 2f;
+        //points[1].x = midpointX;
+        //points[2].x = midpointX;
+
+        //float deltaY = points[3].y - points[0].y;
+        //float controlY = deltaY > 0f ? -1f : 1f;
+        //points[1].y = controlY + points[0].y;
+        //points[2].y = -controlY + points[3].y;
+
+        //points[1].z = points[0].z;
+        //points[2].z = points[3].z;
+    }
+
+    private float DetermineCurvature(Vector3 p0, Vector3 p1)
+    {
+        float endpointsAngle = Vector3.Angle(p0, p1);
+        if (endpointsAngle < 30f)
+        {
+            return Mathf.Lerp(minCurvature, medCurvature, )
+            if (Vector3.Distance(points[0], points[3]) < medCurvature * pipeRadius) return minCurvature;
+            else return medCurvature;
+        }
+        else if (endpointsAngle < 90f) return minCurvature;
+        else if (endpointsAngle >= 180f) return minCurvature;
+        else if (endpointsAngle >= 90f)
+        {
+            Vector3 difference = p0 - p1;
+            if ((points[3].x - points[0].x * difference.x > 0f) && (points[3].y - points[0].y * difference.y > 0f)) return minCurvature;
+            else return maxCurvature;
+        }
+
+        return minCurvature;
+    }
+
+    private float MaxAbsolute(float a, float b)
+    {
+        if(Mathf.Abs(a) > Mathf.Abs(b)) return a;
+        else return b;
     }
 
     private void SetVertices()
@@ -149,7 +200,7 @@ public class PipeCreator : MonoBehaviour {
         angle = angle * Mathf.Deg2Rad;
         Vector3 p;
 
-        float r = pipeRadius * Mathf.Cos(v);
+        float r = pipeRadius * Mathf.Cos(v) *direction.x;
         p.x = -Mathf.Cos(v) * direction.y * pipeRadius;
         p.y = r;
         p.z = pipeRadius * Mathf.Sin(v);
@@ -175,24 +226,24 @@ public class PipeCreator : MonoBehaviour {
             3f * t * t * (p3 - p2);
     }
 
-    private Vector3 GetVelocity(float t)
+    private Vector3 GetVelocity(float u)
     {
-        return GetFirstDerivative(points[0], points[1], points[2], points[3], t);
+        return GetFirstDerivative(points[0], points[1], points[2], points[3], u);
     }
 
-    private Vector3 GetDirection(float t, float length = 1f)
+    private Vector3 GetDirection(float u, float length = 1f)
     {
-        if (t == 0f)
+        if (u == 0f)
         {
             return startDirection.normalized * length;
         }
-        else if (t == 1f)
+        else if (u == 1f)
         {
             return endDirection.normalized * length;
         }
         else
         {
-            return GetVelocity(t).normalized * length;
+            return GetVelocity(u).normalized * length;
         }
     }
 

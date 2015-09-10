@@ -76,6 +76,8 @@ MonoBehaviour:
   segmentCount: 22
   sideCount: 10
   directionLength: 1
+  pointOffset: .625
+  minCurvature: 10
   startDirection: {x: 1, y: 0, z: 0}
   endDirection: {x: 1, y: 0, z: 0}
   points:
