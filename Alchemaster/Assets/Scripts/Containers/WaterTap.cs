@@ -5,10 +5,10 @@ public class WaterTap : Container {
 
     void Start()
     {
-        contents = new Fluid();
+        //contents = new Fluid();
     }
 
-    void Update()
+    public override void Update()
     {
         Refill(outputVolume * 2);
         OutputFluid(outputVolume, contents);

@@ -51,7 +51,7 @@ MonoBehaviour:
   otherEnd: {fileID: 0}
   pipePrefab: {fileID: 151806, guid: 57f6f2bec6912494fa1f02cfc9a8d7d5, type: 2}
   pipe: {fileID: 0}
-  pipeRadius: .0500000007
+  pipeRadius: .200000003
 --- !u!135 &13506274
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -70,7 +70,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: pipeRadius
+      value: .200000003
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 165020}

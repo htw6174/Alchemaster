@@ -60,8 +60,11 @@ public class PipeCreator : MonoBehaviour {
     private void UpdatePipeMesh()
     {
         if(autoControlPoints) PlaceControlPoints();
-        GetComponent<MeshFilter>().mesh = mesh = new Mesh();
-        mesh.name = "Pipe";
+        if(mesh == null)
+        {
+            GetComponent<MeshFilter>().mesh = mesh = new Mesh();
+            mesh.name = "Pipe";
+        }
         SetVertices();
         SetTriangles();
         mesh.RecalculateNormals();
@@ -105,9 +108,7 @@ public class PipeCreator : MonoBehaviour {
         float endpointsAngle = Vector3.Angle(p0, p1);
         if (endpointsAngle < 30f)
         {
-            return Mathf.Lerp(minCurvature, medCurvature, )
-            if (Vector3.Distance(points[0], points[3]) < medCurvature * pipeRadius) return minCurvature;
-            else return medCurvature;
+            return Mathf.Lerp(minCurvature, medCurvature, Vector3.Distance(points[0], points[3]) - (medCurvature * pipeRadius));
         }
         else if (endpointsAngle < 90f) return minCurvature;
         else if (endpointsAngle >= 180f) return minCurvature;
@@ -270,6 +271,6 @@ public class PipeCreator : MonoBehaviour {
                 //Gizmos.DrawSphere(point + transform.position, 0.1f);
             }
         }
-        UpdatePipeMesh();
+        //UpdatePipeMesh();
     }
 }

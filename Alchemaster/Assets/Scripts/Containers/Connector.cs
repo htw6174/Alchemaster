@@ -9,6 +9,8 @@ public class Connector : MonoBehaviour
     public bool input;
     public bool output;
 
+    public int index; //Only used for containers with multiple inputs, for identifying the sending connector
+
     public Vector3 direction;
 
     public Connector otherEnd;
@@ -95,7 +97,7 @@ public class Connector : MonoBehaviour
         {
             if (otherEnd.input == true)
             {
-                return otherEnd.parentContainer.InputFluid(volume, fluid);
+                return otherEnd.parentContainer.InputFluid(volume, fluid, otherEnd.index);
             }
         }
         return 0;

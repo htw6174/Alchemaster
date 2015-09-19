@@ -12,12 +12,12 @@ public class Fluid {
 
     public Fluid()
     {
-        name = "Water";
+        name = null;
         solutes = new Solute[0];
         color = Color.white;
     }
 
-    public Fluid(Solute[] newSolutes, string newName = "Unnamed Compound")
+    public Fluid(Solute[] newSolutes, string newName = null)
     {
         name = newName;
         solutes = new Solute[newSolutes.Length];

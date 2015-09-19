@@ -17,26 +17,26 @@ public class Container : MonoBehaviour {
 
     private MeshRenderer meshRenderer;
 
-    void Awake()
+    public virtual void Awake()
     {
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         connections = transform.GetComponentsInChildren<Connector>();
     }
 
-    void Update()
+    public virtual void Update()
     {
-        UpdateVolumeDisplay();
+        UpdateVolumeDisplay(volumeDisplay, currentVolume, maxVolume, contents.name);
         OutputFluid(outputVolume, contents);
         //UpdateColor();
     }
 
-    private void UpdateVolumeDisplay()
+    public virtual void UpdateVolumeDisplay(Text display, int current, int max, string name)
     {
-        if (volumeDisplay)
+        if (display)
         {
-            string formattedCurrent = string.Format("{0:F3}", (currentVolume / 1000f));
-            string formattedMax = string.Format("{0:F3}", (maxVolume / 1000f));
-            volumeDisplay.text = formattedCurrent + " L /\n" + formattedMax + " L " + (currentVolume == 0 ? "" : contents.name);
+            string formattedCurrent = string.Format("{0:F3}", (current / 1000f));
+            string formattedMax = string.Format("{0:F3}", (max / 1000f));
+            display.text = formattedCurrent + " L /\n" + formattedMax + " L " + (current == 0 ? "" : name);
         }
     }
 
@@ -54,7 +54,7 @@ public class Container : MonoBehaviour {
     }
 
     //Called to insert fluid into the container. Adds fluid to the container and returns the volume of fluid input
-    public virtual int InputFluid(int volume, Fluid fluid)
+    public virtual int InputFluid(int volume, Fluid fluid, int index = 0)
     {
         if (currentVolume == 0 || contents == null)
         {
