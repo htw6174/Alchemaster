@@ -34,7 +34,7 @@ public class Fluid {
     //Incomplete function, should check list of solutes in each fluid to see if they are the same despite order
     public bool SameSolution(Fluid otherFluid)
     {
-        if (otherFluid.name == this.name)
+        if (this.name == null || otherFluid.name == null || otherFluid.name == this.name)
         {
             return true;
         }
